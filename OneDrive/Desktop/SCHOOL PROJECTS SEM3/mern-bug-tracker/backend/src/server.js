@@ -1,29 +1,35 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
 
-dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
-
-  app.get("/", (req, res) => {
-  res.send("Bug Tracker API is running!");
+// Root route for testing
+app.get("/", (req, res) => {
+  res.send("🚀 Bug Tracker API is running!");
 });
 
-// Use Render's dynamic port or fallback to 5000 for local
+// Example API route
+app.get("/api/bugs", (req, res) => {
+  res.json({ message: "Bug routes work!" });
+});
+
+// MongoDB connection
+const MONGO_URI = process.env.MONGO_URI;
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// Use Render's dynamic port
 const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
 
 
